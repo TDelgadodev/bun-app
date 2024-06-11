@@ -11,9 +11,10 @@ app.get("/test", (c) => {
   return c.json({ message: "test" });
 });
 
-app.route("/api/expenses", expensesRoutes);
+const ApiRoutes = app.basePath("/api").route("/expenses", expensesRoutes)
 
-app.use("*", serveStatic({ root: "./frontend/dist" }))
-app.get("*", serveStatic({ path: "./frontend/index.html" }))
+app.use("*", serveStatic({ root: "./frontend/dist" }));
+app.get("*", serveStatic({ path: "./frontend/index.html" }));
 
 export default app;
+export type ApiRoutes = typeof ApiRoutes
