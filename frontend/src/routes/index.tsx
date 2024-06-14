@@ -24,23 +24,31 @@ async function getTotalSpent() {
 }
 
 function Index() {
-  const { data, isPending, error } = useQuery({
+  const { data, isFetching, error } = useQuery({
     queryKey: ["get-total-spent"],
     queryFn: getTotalSpent,
   });
 
-  if (error) return "An error has ocurred: " + error.message;
+  if (error) {
+    return <div className="text-destructive-foreground">An error has occurred: {error.message}</div>;
+  }
 
   return (
-    <>
-      <Card className="w-[350px m-auto]">
-        <CardHeader>
-          <CardTitle>Total spent</CardTitle>
-          <CardDescription>The total amount you've spent</CardDescription>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background m-4 p-4">
+      <Card className="w-full max-w-md p-4 bg-card shadow-md rounded-lg">
+        <CardHeader className="border-b border-border pb-2 mb-4">
+          <CardTitle className="text-2xl font-bold text-card-foreground">Total Spent</CardTitle>
+          <CardDescription className="text-muted-foreground">The total amount you've spent</CardDescription>
         </CardHeader>
-        <CardContent>{isPending ? "...." : data.total}</CardContent>
+        <CardContent className="text-center text-xl font-semibold text-card-foreground">
+          {isFetching ? (
+            <div className="animate-pulse">Loading...</div>
+          ) : (
+            data && `$${data.total.toFixed(2)}`
+          )}
+        </CardContent>
       </Card>
-    </>
+    </div>
   );
 }
 
