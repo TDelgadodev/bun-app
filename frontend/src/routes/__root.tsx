@@ -1,41 +1,48 @@
-import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/router-devtools'
+import {
+  createRootRouteWithContext,
+  Link,
+  Outlet,
+} from "@tanstack/react-router";
+import { Toaster } from "@/components/ui/sonner"
+import { type QueryClient } from "@tanstack/react-query";
 
-const Header = () => (
-  <header className="p-4 bg-blue-600 text-white flex justify-between items-center">
-    <div className="text-xl font-bold">My App</div>
-    <nav>
-      <Link to="/" className="[&.active]:font-bold mx-2">
-        Home
-      </Link>
-      <Link to="/about" className="[&.active]:font-bold mx-2">
-        About
-      </Link>
-      <Link to="/expenses" className="[&.active]:font-bold mx-2">
-        Expenses
-      </Link>
-      <Link to="/create-expense" className="[&.active]:font-bold mx-2">
-        Create
-      </Link>
-    </nav>
-  </header>
-)
+interface MyRouterContext {
+  queryClient: QueryClient;
+}
 
-const Footer = () => (
-  <footer className="p-4 bg-gray-800 text-white text-center">
-    &copy; {new Date().getFullYear()} My App. All rights reserved.
-  </footer>
-)
+export const Route = createRootRouteWithContext<MyRouterContext>()({
+  component: Root,
+});
 
-export const Route = createRootRoute({
-  component: () => (
+function NavBar() {
+  return (
+    <div className="p-2 flex justify-between max-w-2xl m-auto items-baseline">
+      <Link to="/"><h1 className="text-2xl font-bold">Expense Tracker</h1></Link>
+      <div className="flex gap-2">
+        <Link to="/about" className="[&.active]:font-bold">
+          About
+        </Link>
+        <Link to="/expenses" className="[&.active]:font-bold">
+          Expenses
+        </Link>
+        <Link to="/create-expense" className="[&.active]:font-bold">
+          Create
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function Root() {
+  return (
     <>
-      <Header />
-      <div className="p-2 flex gap-2">
+      <NavBar />
+      <hr />
+      <div className="p-2 max-w-2xl m-auto">
         <Outlet />
       </div>
-      <Footer />
-      <TanStackRouterDevtools />
+      <Toaster />
+      {/* <TanStackRouterDevtools /> */}
     </>
-  ),
-})
+  );
+}
